@@ -1,19 +1,23 @@
-import serial
-import time
+#include <Arduino.h>
 
-arduino = serial.Serial('COM3', 9600)  # Open serial port
-time.sleep(2)  # Wait for Arduino to reset
+const int ledPin = 13; // Pin connected to the LED
 
-while True:
-    command = input("Enter 1 to turn ON LED, 0 to turn OFF LED, q to quit: ")
+void setup() {
+  pinMode(ledPin, OUTPUT);   // Set LED pin as output
+  Serial.begin(9600);       // Start serial communication
+}
 
-    if command == 'q':
-        break
-    elif command == '1':
-        arduino.write(b'1')
-    elif command == '0':
-        arduino.write(b'0')
-    else:
-        print("Invalid command. Please enter 1, 0, or q.")
+void loop() {
+  if (Serial.available() > 0) {
+    char command = Serial.read();
 
-arduino.close()
+    if (command == '1') {
+      digitalWrite(ledPin, HIGH);
+      Serial.println("LED ON");
+    }
+    else if (command == '0') {
+      digitalWrite(ledPin, LOW);
+      Serial.println("LED OFF");
+    }
+  }
+}
